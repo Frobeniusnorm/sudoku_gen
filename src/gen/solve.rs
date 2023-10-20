@@ -1,4 +1,5 @@
-pub fn get_possibilities(s: [[i32; 9]; 9], i: usize, j: usize) -> [bool; 9] {
+
+pub fn get_possibilities(s: &[[i32; 9]; 9], i: usize, j: usize) -> [bool; 9] {
     let mut poss: [bool; 9] = [true; 9];
     for p in 0..9 {
         // check in row

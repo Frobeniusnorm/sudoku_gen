@@ -1,8 +1,14 @@
 mod shuffle;
 mod solve;
 mod solver1;
+mod solver2;
 use shuffle::shuffle_array;
-fn solve_sudoku_simple(s: &mut [[i32; 9]; 9]) -> bool {
+pub struct Sudoku {
+    pub problem: [[i32; 9]; 9],
+    pub solution: [[i32; 9]; 9],
+    pub score: usize,
+}
+pub fn solve_sudoku_simple(s: &mut [[i32; 9]; 9]) -> bool {
     fn solve_step(s: &mut [[i32; 9]; 9], i: usize, j: usize) -> bool {
         if i > 8 {
             return true;
@@ -15,7 +21,7 @@ fn solve_sudoku_simple(s: &mut [[i32; 9]; 9]) -> bool {
             }
         }
         // check possibilities
-        let mut poss: [bool; 9] = solve::get_possibilities(*s, i, j);
+        let mut poss: [bool; 9] = solve::get_possibilities(s, i, j);
         // check in square
         let basei = (i / 3) * 3;
         let basej = (j / 3) * 3;
@@ -44,7 +50,8 @@ fn solve_sudoku_simple(s: &mut [[i32; 9]; 9]) -> bool {
     }
     return solve_step(s, 0, 0);
 }
-fn delete_fields(s: &mut [[i32; 9]; 9], level: u32) {
+fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
+    let mut score = 1;
     'delloop: loop {
         let mut ind1: [usize; 9] = core::array::from_fn(|i| i);
         let mut ind2: [usize; 9] = core::array::from_fn(|i| i);
@@ -61,7 +68,13 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u32) {
                     0 => {
                         if solver1::solve_logic1(s) {
                             continue 'delloop;
-                        } else {
+                        }
+                    }
+                    1 => {
+                        let local_score = solver2::solve_logic2(s);
+                        if local_score > 0 {
+                            score = local_score;
+                            continue 'delloop;
                         }
                     }
                     _ => {}
@@ -71,10 +84,23 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u32) {
         }
         break;
     }
+    return score;
 }
-pub fn generate() -> [[i32; 9]; 9] {
+pub fn generate(level: u8) -> Sudoku {
     let mut empty = [[0; 9]; 9];
     solve_sudoku_simple(&mut empty);
-    delete_fields(&mut empty, 0);
-    return empty;
+    let mut problem = [[0; 9]; 9];
+
+    for i in 0..9 {
+        for j in 0..9 {
+            problem[i][j] = empty[i][j];
+        }
+    }
+    let score = delete_fields(&mut problem, level);
+    let sudoku = Sudoku {
+        problem,
+        solution: empty,
+        score,
+    };
+    return sudoku;
 }
