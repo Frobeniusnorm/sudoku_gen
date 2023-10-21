@@ -22,6 +22,7 @@ pub fn solve_logic1(s: &mut [[i32; 9]; 9]) -> bool {
                 }
                 if count == 1 {
                     s[i][j] = (last + 1) as i32;
+                    println!("{i} {j} {}", last + 1);
                     let rekres = solve_logic1(s);
                     s[i][j] = 0;
                     return rekres;

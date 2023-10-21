@@ -1,7 +1,7 @@
 mod shuffle;
-mod solve;
-mod solver1;
-mod solver2;
+pub mod solve;
+pub mod solver1;
+pub mod solver2;
 use shuffle::shuffle_array;
 pub struct Sudoku {
     pub problem: [[i32; 9]; 9],
@@ -71,9 +71,7 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
                         }
                     }
                     1 => {
-                        let local_score = solver2::solve_logic2(s);
-                        if local_score > 0 {
-                            score = local_score;
+                        if solver2::solve_logic2(s) {
                             continue 'delloop;
                         }
                     }
@@ -84,7 +82,17 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
         }
         break;
     }
-    return score;
+    match level {
+        0 => {
+            return 1;
+        }
+        1 => { 
+            return solver2::score(s);
+        }
+        _ => {
+            return 0;
+        }
+    }
 }
 pub fn generate(level: u8) -> Sudoku {
     let mut empty = [[0; 9]; 9];
