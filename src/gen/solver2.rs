@@ -80,6 +80,26 @@ fn distinct_possibility(s: &[[i32; 9]; 9], possibilities: &[bool; 9], i: usize, 
 pub fn solve_logic2(s: &mut [[i32; 9]; 9]) -> usize {
     /* solve_logic1 + per group (box, row, column) for empty fields with multiple possibilities
      * test if one value is only possible or one field, then insert. */
+    // first try advanced logic
+    for i in 0..9 {
+        for j in 0..9 {
+            if s[i][j] == 0 {
+                let poss = get_possibilities(s, i, j);
+                let (v, difficulty) = distinct_possibility(&s, &poss, i, j);
+                if v >= 0 {
+                    s[i][j] = v + 1;
+                    let rekres = solve_logic2(s);
+                    s[i][j] = 0;
+                    if rekres > 0 {
+                        return rekres + difficulty;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+    // did not work -> level1 logic
     let mut was_zero = false;
     for i in 0..9 {
         for j in 0..9 {
@@ -102,18 +122,6 @@ pub fn solve_logic2(s: &mut [[i32; 9]; 9]) -> usize {
                     let rekres = solve_logic2(s);
                     s[i][j] = 0;
                     return rekres;
-                }
-                // here advanced logic starts
-                let (v, difficulty) = distinct_possibility(&s, &poss, i, j);
-                if v >= 0 {
-                    s[i][j] = v + 1;
-                    let rekres = solve_logic2(s);
-                    s[i][j] = 0;
-                    if rekres > 0 {
-                        return rekres + difficulty;
-                    } else {
-                        return 0;
-                    }
                 }
             }
         }
