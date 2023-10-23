@@ -148,54 +148,5 @@ pub fn solve_logic2(s: &mut [[i32; 9]; 9]) -> bool {
     return !was_zero;
 }
 
-pub fn score(s: &mut [[i32; 9]; 9]) -> usize {
-    let mut was_zero = false;
-    for i in 0..9 {
-        for j in 0..9 {
-            if s[i][j] == 0 {
-                was_zero = true;
-                let poss = get_possibilities(s, i, j);
-                let mut count = 0;
-                let mut last = 0;
-                for k in 0..9 {
-                    if poss[k] {
-                        count += 1;
-                        last = k;
-                    }
-                }
-                if count == 0 {
-                    return 1;
-                }
-                if count == 1 {
-                    s[i][j] = (last + 1) as i32;
-                    let rekres = score(s);
-                    s[i][j] = 0;
-                    return rekres;
-                }
-            }
-        }
-    }
-    if !was_zero {
-        return 1;
-    }
-    for i in 0..9 {
-        for j in 0..9 {
-            if s[i][j] == 0 {
-                let poss = get_possibilities(s, i, j);
-                let (v, difficulty) = distinct_possibility(&s, &poss, i, j);
-                if v >= 0 {
-                    s[i][j] = v + 1;
-                    let rekres = score(s);
-                    s[i][j] = 0;
-                    if rekres > 0 {
-                        return rekres + difficulty;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
+
 

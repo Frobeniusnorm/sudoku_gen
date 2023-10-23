@@ -1,24 +1,27 @@
-pub mod gen;
 mod draw;
+pub mod gen;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[command(author="Frobeniusnorm", version="0.0.1", about, long_about = None)]
 struct Args {
-    // reasoning level to apply (0, 1)
-    #[arg(short, long, default_value_t = 1)]
+    // reasoning level to apply (0, 1, 2)
+    #[arg(short, long, default_value_t = 2)]
     reasoning: u8,
 
     // print solution
     #[arg(short, long, default_value_t = true)]
     solution: bool,
 
-    // generate image
+    // generate image (disables per default printing on stdout, see print)
     #[arg(short, long, default_value_t = false)]
-    image: bool
+    image: bool,
+
+    // print sodoku on stdout additional to image generation
+    #[arg(short, long, default_value_t = false)]
+    print: bool,
 }
 fn print_sudoku(s: &[[i32; 9]; 9]) {
-
     for _j in 0..9 {
         print!("*-");
     }
@@ -39,14 +42,16 @@ fn print_sudoku(s: &[[i32; 9]; 9]) {
     }
 }
 fn main() {
-    let args = Args::parse();
-    let s = gen::generate(args.reasoning);
-    println!("Score: {}", s.score);
-    print_sudoku(&s.problem);
-    if args.solution {
-        print_sudoku(&s.solution);
-    }
-    if args.image {
-        draw::draw_sudoku(&s, args.solution);
-    }
+   let args = Args::parse();
+   let s = gen::generate(args.reasoning);
+   println!("score: {}", s.score);
+   if args.print || !args.image {
+       print_sudoku(&s.problem);
+   }
+   if (args.print || !args.image) && args.solution {
+       print_sudoku(&s.solution);
+   }
+   if args.image {
+       draw::draw_sudoku(&s, args.solution);
+   }
 }

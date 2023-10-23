@@ -91,8 +91,8 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
         0 => {
             return 1;
         }
-        1 => { 
-            return solver2::score(s);
+        1 | 2 => { 
+            return solver3::score(s);
         }
         _ => {
             return 0;
