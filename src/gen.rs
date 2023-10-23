@@ -2,6 +2,7 @@ mod shuffle;
 pub mod solve;
 pub mod solver1;
 pub mod solver2;
+pub mod solver3;
 use shuffle::shuffle_array;
 pub struct Sudoku {
     pub problem: [[i32; 9]; 9],
@@ -51,7 +52,6 @@ pub fn solve_sudoku_simple(s: &mut [[i32; 9]; 9]) -> bool {
     return solve_step(s, 0, 0);
 }
 fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
-    let mut score = 1;
     'delloop: loop {
         let mut ind1: [usize; 9] = core::array::from_fn(|i| i);
         let mut ind2: [usize; 9] = core::array::from_fn(|i| i);
@@ -72,6 +72,11 @@ fn delete_fields(s: &mut [[i32; 9]; 9], level: u8) -> usize {
                     }
                     1 => {
                         if solver2::solve_logic2(s) {
+                            continue 'delloop;
+                        }
+                    }
+                    2 => {
+                        if solver3::solve_logic3(s) {
                             continue 'delloop;
                         }
                     }

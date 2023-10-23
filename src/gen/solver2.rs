@@ -1,6 +1,6 @@
 use super::solve::get_possibilities;
 
-fn distinct_possibility(
+pub fn distinct_possibility(
     s: &[[i32; 9]; 9],
     possibilities: &[bool; 9],
     i: usize,
