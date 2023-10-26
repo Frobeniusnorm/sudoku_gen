@@ -7,4 +7,4 @@ Generates Sudokus in various logic levels:
 Is able of generating the solution to the problem and output it to the terminal or an image (both).
 Assigns a score to each problem depending on the simplest solution that can be found (difficulty increases with logic level, level 1 has always difficulty 1, for the other levels difficulty sums up).
 
-Needs a font file to generate images, this repository contains [https://github.com/tonsky/FiraCode](Fira Code Mono).
+Needs a font file to generate images, this repository contains [Fira Code Mono](https://github.com/tonsky/FiraCode).
